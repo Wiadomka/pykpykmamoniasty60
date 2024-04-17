@@ -1,0 +1,53 @@
+package com.example.iie_szarzy_2024;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+
+import java.sql.*;
+
+public class ProfileController {
+    private Main mainApp;
+
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/";
+    private static final String DB_NAME = "sklepszary";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
+    Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+
+    @FXML
+    public Label nameLabel;
+
+    @FXML
+    public Label surnameLabel;
+
+    @FXML
+    public Label phonenumLabel;
+
+    public ProfileController(Connection connection) throws SQLException {
+
+        String query = "select * from administratorzy";
+
+        try (Statement stmt = connection.createStatement()) {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                int id = rs.getInt("IDAdministratora");
+                String name = rs.getString("Imie");
+                String username = rs.getString("Nazwisko");
+                String login = rs.getString("Login");
+                String haslo = rs.getString("Haslo");
+                System.out.println(id + ", " + name + ", " + username + ", " + login +
+                        ", " + haslo);
+            }
+        } catch (SQLException e) {
+            System.out.println("wyjatek");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+}
+
+
+
+
