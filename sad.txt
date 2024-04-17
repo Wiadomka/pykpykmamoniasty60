@@ -22,13 +22,18 @@ public class ProfileController {
     @FXML
     public Label phonenumLabel;
 
-    public ProfileController() {
+    @FXML
+    public void initialize() {
+        nameLabel.setText(ProfileController());
+    }
+
+    public String ProfileController() {
         try (Connection connection = DriverManager.getConnection(DB_URL + DB_NAME, USER, PASSWORD);
              Statement stmt = connection.createStatement()) {
 
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            String query = "select * from administratorzy";
+            String query = "select * from administratorzy where IDAdministratora = 1";
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
@@ -37,8 +42,8 @@ public class ProfileController {
                 String username = rs.getString("Nazwisko");
                 String login = rs.getString("Login");
                 String haslo = rs.getString("Haslo");
+                return name;
 
-                System.out.println(id + ", " + name + ", " + username + ", " + login + ", " + haslo);
             }
 
         } catch (SQLException e) {
@@ -48,5 +53,5 @@ public class ProfileController {
             System.out.println("Class not found: " + e.getMessage());
             throw new RuntimeException(e);
         }
-    }
+    return ProfileController();}
 }
