@@ -12,7 +12,6 @@ public class ProfileController {
     private static final String DB_NAME = "sklepszary";
     private static final String USER = "root";
     private static final String PASSWORD = "";
-    Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 
     @FXML
     public Label nameLabel;
@@ -23,31 +22,31 @@ public class ProfileController {
     @FXML
     public Label phonenumLabel;
 
-    public ProfileController(Connection connection) throws SQLException {
+    public ProfileController() {
+        try (Connection connection = DriverManager.getConnection(DB_URL + DB_NAME, USER, PASSWORD);
+             Statement stmt = connection.createStatement()) {
 
-        String query = "select * from administratorzy";
-
-        try (Statement stmt = connection.createStatement()) {
             Class.forName("com.mysql.cj.jdbc.Driver");
+
+            String query = "select * from administratorzy";
             ResultSet rs = stmt.executeQuery(query);
+
             while (rs.next()) {
                 int id = rs.getInt("IDAdministratora");
                 String name = rs.getString("Imie");
                 String username = rs.getString("Nazwisko");
                 String login = rs.getString("Login");
                 String haslo = rs.getString("Haslo");
-                System.out.println(id + ", " + name + ", " + username + ", " + login +
-                        ", " + haslo);
+
+                System.out.println(id + ", " + name + ", " + username + ", " + login + ", " + haslo);
             }
+
         } catch (SQLException e) {
-            System.out.println("wyjatek");
+            System.out.println("SQL Exception: " + e.getMessage());
+            e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            System.out.println("Class not found: " + e.getMessage());
             throw new RuntimeException(e);
         }
-
     }
 }
-
-
-
-
